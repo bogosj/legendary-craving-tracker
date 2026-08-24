@@ -1,0 +1,17 @@
+{
+  "name": "NecroMerger Legendary Craving Tracker",
+  "short_name": "Legendary Cravings",
+  "description": "Track NecroMerger Legendary Cravings, rune expenditures, and Wobulars",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b0d14",
+  "theme_color": "#0b0d14",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
