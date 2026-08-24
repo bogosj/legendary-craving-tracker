@@ -1,19 +1,25 @@
+import { pwaManager } from '../../pwa/pwaManager.ts';
 import { trackerState } from '../../state/trackerState.ts';
 import { getWobularIconSvg } from '../icons.ts';
+import { InstallModalComponent } from './InstallModal.ts';
 
 export class HeaderComponent {
   private container: HTMLElement;
   private onShareClick: () => void;
+  private installModal: InstallModalComponent;
 
-  constructor(container: HTMLElement, onShareClick: () => void) {
+  constructor(container: HTMLElement, onShareClick: () => void, installModal: InstallModalComponent) {
     this.container = container;
     this.onShareClick = onShareClick;
+    this.installModal = installModal;
     this.render();
     trackerState.subscribe(() => this.render());
+    pwaManager.subscribe(() => this.render());
   }
 
   private render() {
     const state = trackerState.getState();
+    const isInstalled = pwaManager.isInstalled();
 
     const maxLevelOptions = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 
@@ -30,6 +36,20 @@ export class HeaderComponent {
             </div>
           </div>
           <div class="header-actions">
+            ${
+              !isInstalled
+                ? `
+                <button class="btn btn-install" id="btn-install-pwa" title="Install as Progressive Web App (PWA)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Install App
+                </button>
+              `
+                : ''
+            }
             <button class="btn btn-primary" id="btn-share" title="Share your run via URL">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="18" cy="5" r="3"></circle>
@@ -76,6 +96,16 @@ export class HeaderComponent {
     `;
 
     // Event listeners
+    if (!isInstalled) {
+      this.container.querySelector('#btn-install-pwa')?.addEventListener('click', async () => {
+        if (pwaManager.canPromptDirectly()) {
+          await pwaManager.promptInstall();
+        } else {
+          this.installModal.open();
+        }
+      });
+    }
+
     this.container.querySelector('#btn-share')?.addEventListener('click', () => {
       this.onShareClick();
     });

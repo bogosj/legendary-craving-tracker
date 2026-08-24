@@ -3,6 +3,7 @@ import { BracketTabsComponent } from './ui/components/BracketTabs.ts';
 import { CravingListComponent } from './ui/components/CravingList.ts';
 import { DashboardComponent } from './ui/components/Dashboard.ts';
 import { HeaderComponent } from './ui/components/Header.ts';
+import { InstallModalComponent } from './ui/components/InstallModal.ts';
 import { NextUpCravingComponent } from './ui/components/NextUpCraving.ts';
 import { ShareModalComponent } from './ui/components/ShareModal.ts';
 
@@ -26,9 +27,10 @@ function initApp() {
   appEl.appendChild(cravingListContainer);
 
   const shareModal = new ShareModalComponent();
+  const installModal = new InstallModalComponent();
 
   // Instantiate components
-  new HeaderComponent(headerContainer, () => shareModal.open());
+  new HeaderComponent(headerContainer, () => shareModal.open(), installModal);
   new NextUpCravingComponent(nextUpContainer);
   new DashboardComponent(dashboardContainer);
   new BracketTabsComponent(bracketTabsContainer);
