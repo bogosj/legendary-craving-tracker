@@ -1,8 +1,14 @@
-const CACHE_NAME = 'necromerger-tracker-v1';
+const CACHE_NAME = 'necromerger-tracker-v2';
 const ASSETS = [
   './',
   './index.html',
   './favicon.svg',
+  './favicon-32.png',
+  './favicon-64.png',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png',
   './manifest.webmanifest'
 ];
 
