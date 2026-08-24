@@ -35,7 +35,7 @@ export class TrackerStateManager {
       updatedAt: Date.now(),
       maxDevourerLevel: 1000,
       selectedBracket: 'all',
-      focusMode: false,
+      focusMode: true,
       completedCravings,
     };
   }
