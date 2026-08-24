@@ -8,6 +8,12 @@
   "theme_color": "#0b0d14",
   "icons": [
     {
+      "src": "./images/wobular.webp",
+      "sizes": "64x64",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
       "src": "./favicon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",

@@ -85,12 +85,11 @@ body {
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: #1e1b4b;
-  border: 2px solid var(--border-gold);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 12px rgba(234, 179, 8, 0.3);
 }
 
 .wiki-rune-icon,

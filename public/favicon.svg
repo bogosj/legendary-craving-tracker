@@ -1,5 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#141724" stroke="#eab308" stroke-width="2"/>
-  <circle cx="32" cy="32" r="22" fill="#f59e0b" stroke="#b45309" stroke-width="3"/>
-  <path d="M32 18C25 18 20 23 20 30C20 38 40 34 40 43C40 46 37 48 32 48M32 14V18M32 48V52" stroke="#fffbeb" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <image href="data:image/webp;base64,UklGRvAAAABXRUJQVlA4TOQAAAAvF8AFEDegOJIMaBf5h+N7E6Oitm2glj+sa4MxFvsqatuIaW/w53QQNpT7zn8A4P+LLhxMB5v+CiDXthu3wUYswKlAoJUC+JEUEHx6PQFaZ5L672GqIaL/EyDb+yAn788TmToc3Gu0v4MPXJuXvald4PPOfdIR3sumszaE/YvI3WgguUmQgPnfIPeoDUDzSLmzamvqTB+621uDgj2G6YtAbd6BePegAXRYfIJMGtBiuamThLr5MmtVAArz5dvqCK1AZvnOq+oIZ0SRW1Bh7rGIfM/sZHIpIvK9ZjCXIrvruq5FRAA=" width="64" height="64" preserveAspectRatio="xMidYMid meet" style="image-rendering: pixelated;"/>
 </svg>
