@@ -108,15 +108,46 @@ export class TrackerStateManager {
 
   // --- ACTIONS ---
 
-  public toggleCraving(slotNumber: number, forceState?: boolean) {
+  public toggleCraving(slotNumber: number, forceState?: boolean): boolean {
     const record = this.state.completedCravings[slotNumber];
-    if (!record) return;
+    if (!record) return false;
 
     const nextCompleted = forceState !== undefined ? forceState : !record.isCompleted;
     record.isCompleted = nextCompleted;
     record.completedAt = nextCompleted ? Date.now() : undefined;
 
     this.notify();
+    return nextCompleted;
+  }
+
+  public getRecentlyCompletedCravings(limit: number = 5) {
+    const completedList: { slotNumber: number; record: CravingRecord; craving: (typeof ALL_CRAVINGS)[0] }[] = [];
+
+    for (const craving of ALL_CRAVINGS) {
+      if (craving.level > this.state.maxDevourerLevel) continue;
+      const record = this.state.completedCravings[craving.slotNumber];
+      if (record && record.isCompleted) {
+        completedList.push({ slotNumber: craving.slotNumber, record, craving });
+      }
+    }
+
+    // Sort by completedAt descending (most recent first). If equal/missing, fallback to slotNumber descending.
+    completedList.sort((a, b) => {
+      const timeA = a.record.completedAt || 0;
+      const timeB = b.record.completedAt || 0;
+      if (timeA !== timeB) return timeB - timeA;
+      return b.slotNumber - a.slotNumber;
+    });
+
+    return completedList.slice(0, limit);
+  }
+
+  public undoLastCompleted(): number | null {
+    const recent = this.getRecentlyCompletedCravings(1);
+    if (recent.length === 0) return null;
+    const slot = recent[0].slotNumber;
+    this.toggleCraving(slot, false);
+    return slot;
   }
 
   public setSlotMinion(slotNumber: number, minionId: LegendaryMinionId) {

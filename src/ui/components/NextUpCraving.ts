@@ -3,6 +3,7 @@ import { LEGENDARIES, LEGENDARY_RUNE_COSTS } from '../../data/legendaries.ts';
 import { trackerState } from '../../state/trackerState.ts';
 import type { LegendaryMinionId, RuneType } from '../../state/types.ts';
 import { getMinionBadgeIconSvg, getRuneIconSvg, getWobularIconSvg } from '../icons.ts';
+import { showToast } from '../toast.ts';
 
 export class NextUpCravingComponent {
   private container: HTMLElement;
@@ -16,22 +17,52 @@ export class NextUpCravingComponent {
   private render() {
     const state = trackerState.getState();
     const activeSlot = trackerState.getCurrentActiveSlot();
+    const recentCompleted = trackerState.getRecentlyCompletedCravings(3);
+    const lastCompleted = recentCompleted[0];
+
+    const totalAllowedCravings = ALL_CRAVINGS.filter((c) => c.level <= state.maxDevourerLevel).length;
+
+    let recentBarHtml = '';
+    if (lastCompleted) {
+      const minionInfo = LEGENDARIES[lastCompleted.record.selectedMinionId];
+      recentBarHtml = `
+        <div class="recently-completed-bar">
+          <div class="recently-completed-info">
+            <span class="recent-tag">Last Done:</span>
+            <span class="recent-minion-badge">
+              ${getMinionBadgeIconSvg(lastCompleted.record.selectedMinionId, 16)}
+              <strong>#${lastCompleted.slotNumber}</strong> ${minionInfo.name}
+            </span>
+          </div>
+          <button class="btn btn-sm btn-undo-recent" id="btn-quick-undo" title="Uncheck craving #${lastCompleted.slotNumber}">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+            Uncheck #${lastCompleted.slotNumber}
+          </button>
+        </div>
+      `;
+    }
 
     if (activeSlot === null) {
       this.container.innerHTML = `
         <div class="next-up-section">
+          ${recentBarHtml}
           <div class="next-up-completed-banner">
             <span style="font-size: 1.25rem;">🎉</span>
             <span>All cravings completed up to <strong>Level ${state.maxDevourerLevel}</strong>!</span>
           </div>
         </div>
       `;
+      this.bindUndoButton(lastCompleted);
       return;
     }
 
     const craving = ALL_CRAVINGS.find((c) => c.slotNumber === activeSlot);
     if (!craving) {
-      this.container.innerHTML = '';
+      this.container.innerHTML = recentBarHtml ? `<div class="next-up-section">${recentBarHtml}</div>` : '';
+      this.bindUndoButton(lastCompleted);
       return;
     }
 
@@ -42,10 +73,10 @@ export class NextUpCravingComponent {
     const runeCosts = LEGENDARY_RUNE_COSTS[selectedMinionId] || {};
     const runeEntries = Object.entries(runeCosts) as [RuneType, number][];
 
-    const totalAllowedCravings = ALL_CRAVINGS.filter((c) => c.level <= state.maxDevourerLevel).length;
-
     this.container.innerHTML = `
       <div class="next-up-section">
+        ${recentBarHtml}
+
         <div class="next-up-header-label">
           <div class="next-up-title-badge">
             <span class="pulse-dot"></span>
@@ -141,13 +172,31 @@ export class NextUpCravingComponent {
     // Event listeners
     const checkbox = this.container.querySelector('.next-up-checkbox');
     checkbox?.addEventListener('click', () => {
-      trackerState.toggleCraving(craving.slotNumber);
+      const isNowCompleted = trackerState.toggleCraving(craving.slotNumber);
+      if (isNowCompleted) {
+        showToast(`Checked off #${craving.slotNumber} ${minionInfo.name}`, {
+          text: 'Undo',
+          onClick: () => trackerState.toggleCraving(craving.slotNumber, false),
+        });
+      }
     });
 
     const select = this.container.querySelector('.next-up-minion-select') as HTMLSelectElement;
     select?.addEventListener('change', (e) => {
       const target = e.target as HTMLSelectElement;
       trackerState.setSlotMinion(craving.slotNumber, target.value as LegendaryMinionId);
+    });
+
+    this.bindUndoButton(lastCompleted);
+  }
+
+  private bindUndoButton(lastCompleted?: { slotNumber: number; record: any; craving: any }) {
+    if (!lastCompleted) return;
+    const undoBtn = this.container.querySelector('#btn-quick-undo');
+    undoBtn?.addEventListener('click', () => {
+      const minionInfo = LEGENDARIES[lastCompleted.record.selectedMinionId as LegendaryMinionId];
+      trackerState.toggleCraving(lastCompleted.slotNumber, false);
+      showToast(`Unchecked #${lastCompleted.slotNumber} ${minionInfo?.name || 'Craving'}`);
     });
   }
 }

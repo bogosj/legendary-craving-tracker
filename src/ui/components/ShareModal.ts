@@ -1,5 +1,6 @@
 import { trackerState } from '../../state/trackerState.ts';
 import { encodeStateToUrl } from '../../state/urlCodec.ts';
+import { showToast } from '../toast.ts';
 
 export class ShareModalComponent {
   private backdropEl: HTMLElement;
@@ -81,19 +82,19 @@ export class ShareModalComponent {
     copyLinkBtn?.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(shareableUrl);
-        this.showToast('Share link copied to clipboard!');
+        showToast('Share link copied to clipboard!');
       } catch {
         const input = this.backdropEl.querySelector('#share-link-input') as HTMLInputElement;
         input.select();
         document.execCommand('copy');
-        this.showToast('Share link copied!');
+        showToast('Share link copied!');
       }
     });
 
     this.backdropEl.querySelector('#btn-copy-json')?.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(jsonString);
-        this.showToast('JSON state copied to clipboard!');
+        showToast('JSON state copied to clipboard!');
       } catch (err) {
         console.error('Failed to copy JSON:', err);
       }
@@ -107,7 +108,7 @@ export class ShareModalComponent {
       a.download = `necromerger-cravings-run-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      this.showToast('JSON backup downloaded!');
+      showToast('JSON backup downloaded!');
     });
 
     const fileInput = this.backdropEl.querySelector('#input-load-file') as HTMLInputElement;
@@ -122,7 +123,7 @@ export class ShareModalComponent {
           const parsed = JSON.parse(content);
           if (parsed && parsed.completedCravings) {
             trackerState.importState(parsed);
-            this.showToast('Run state loaded successfully!');
+            showToast('Run state loaded successfully!');
             this.close();
           } else {
             alert('Invalid tracker state JSON file format.');
@@ -133,19 +134,5 @@ export class ShareModalComponent {
       };
       reader.readAsText(file);
     });
-  }
-
-  private showToast(message: string) {
-    let toast = document.querySelector('.toast') as HTMLElement;
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.className = 'toast';
-      document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2500);
   }
 }
