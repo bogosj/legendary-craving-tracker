@@ -54,6 +54,5 @@ export interface TrackerRunState {
   updatedAt: number;
   maxDevourerLevel: number;  // Filter: 100, 200, 300, ..., 1000
   selectedBracket: string;   // 'all' | '101-200' | '201-400' | '401-900' | '901-1000'
-  focusMode: boolean;        // Only show current & next 5 cravings
   completedCravings: Record<number, CravingRecord>; // Keyed by slotNumber
 }

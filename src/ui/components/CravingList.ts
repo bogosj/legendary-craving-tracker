@@ -28,95 +28,10 @@ export class CravingListComponent {
       );
     }
 
-    if (state.focusMode) {
-      this.renderFocusMode(filteredCravings, state, activeSlot);
-    } else {
-      this.renderFullList(filteredCravings, state, activeSlot);
-    }
+    this.renderList(filteredCravings, state, activeSlot);
   }
 
-  private renderFocusMode(
-    filteredCravings: CravingDefinition[],
-    state: ReturnType<typeof trackerState.getState>,
-    activeSlot: number | null
-  ) {
-    const allowedSlotSet = new Set(filteredCravings.map((c) => c.slotNumber));
-
-    // Get recently completed cravings within the current filter
-    const recentCompleted = trackerState
-      .getRecentlyCompletedCravings(5)
-      .filter((item) => allowedSlotSet.has(item.slotNumber));
-
-    // Upcoming uncompleted cravings
-    const upcomingCravings = filteredCravings
-      .filter((c) => !state.completedCravings[c.slotNumber]?.isCompleted)
-      .slice(0, 6);
-
-    if (upcomingCravings.length === 0 && recentCompleted.length === 0) {
-      this.container.innerHTML = `
-        <div class="stat-card" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
-          <h3>No cravings found for the selected filter.</h3>
-          <p style="margin-top: 0.5rem; font-size: 0.9rem;">Try adjusting the Devourer Max Level or switching bracket tabs.</p>
-        </div>
-      `;
-      return;
-    }
-
-    let html = '';
-
-    // 1. Recently Completed Section (if any exist)
-    if (recentCompleted.length > 0) {
-      html += `
-        <div class="cravings-section-group">
-          <div class="section-group-header">
-            <div class="section-group-title">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>Recently Completed (${recentCompleted.length})</span>
-            </div>
-            <span class="section-group-hint">Tap checkbox or "Uncheck" to restore</span>
-          </div>
-          <div class="cravings-list recent-completed-list">
-            ${recentCompleted.map((item) => this.renderCravingCard(item.craving, state, activeSlot)).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    // 2. Upcoming Cravings Section
-    if (upcomingCravings.length > 0) {
-      html += `
-        <div class="cravings-section-group" style="${recentCompleted.length > 0 ? 'margin-top: 1.5rem;' : ''}">
-          <div class="section-group-header">
-            <div class="section-group-title">
-              <span class="pulse-dot"></span>
-              <span>Upcoming Cravings (Next ${upcomingCravings.length})</span>
-            </div>
-            <span class="section-group-hint">Focus mode active</span>
-          </div>
-          <div class="cravings-list">
-            ${upcomingCravings.map((craving) => this.renderCravingCard(craving, state, activeSlot)).join('')}
-          </div>
-        </div>
-      `;
-    } else {
-      html += `
-        <div class="next-up-completed-banner" style="margin-top: 1rem;">
-          <span style="font-size: 1.25rem;">🎉</span>
-          <span>All cravings in this bracket are completed!</span>
-        </div>
-      `;
-    }
-
-    this.container.innerHTML = html;
-    this.bindCardEvents(
-      [...recentCompleted.map((r) => r.craving), ...upcomingCravings],
-      state
-    );
-  }
-
-  private renderFullList(
+  private renderList(
     filteredCravings: CravingDefinition[],
     state: ReturnType<typeof trackerState.getState>,
     activeSlot: number | null

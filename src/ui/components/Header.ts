@@ -60,13 +60,6 @@ export class HeaderComponent {
               </svg>
               Share / Export
             </button>
-            <button class="btn ${state.focusMode ? 'btn-active' : ''}" id="btn-focus-mode" title="Toggle Focus Mode (Show Current + Next 5 cravings vs All)">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-              ${state.focusMode ? 'Focus: ON (Next 5)' : 'Focus: OFF (All)'}
-            </button>
             <button class="btn btn-danger" id="btn-reset" title="Reset all tracker data">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
@@ -108,10 +101,6 @@ export class HeaderComponent {
 
     this.container.querySelector('#btn-share')?.addEventListener('click', () => {
       this.onShareClick();
-    });
-
-    this.container.querySelector('#btn-focus-mode')?.addEventListener('click', () => {
-      trackerState.toggleFocusMode();
     });
 
     this.container.querySelector('#btn-reset')?.addEventListener('click', () => {

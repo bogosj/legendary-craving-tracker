@@ -35,7 +35,6 @@ export class TrackerStateManager {
       updatedAt: Date.now(),
       maxDevourerLevel: 1000,
       selectedBracket: 'all',
-      focusMode: true,
       completedCravings,
     };
   }
@@ -165,11 +164,6 @@ export class TrackerStateManager {
 
   public setSelectedBracket(bracket: string) {
     this.state.selectedBracket = bracket;
-    this.notify();
-  }
-
-  public toggleFocusMode() {
-    this.state.focusMode = !this.state.focusMode;
     this.notify();
   }
 
