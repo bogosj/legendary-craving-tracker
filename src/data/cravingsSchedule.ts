@@ -69,8 +69,8 @@ export function generateAllCravings(): CravingDefinition[] {
     currentSlot++;
   }
 
-  // Bracket 3: 401 - 900 (every 3 levels, starting from 403 -> 166 total: slots 71 to 236)
-  for (let lvl = 403; lvl <= 898; lvl += 3) {
+  // Bracket 3: 401 - 800 (every 3 levels, starting from 403 -> 132 total: slots 71 to 202)
+  for (let lvl = 403; lvl <= 800; lvl += 3) {
     if (lvl === 799) continue; // Skip known 799 anomaly per wiki notes
     cravings.push({
       slotNumber: currentSlot,
@@ -80,17 +80,9 @@ export function generateAllCravings(): CravingDefinition[] {
     });
     currentSlot++;
   }
-  // Level 900 milestone
-  cravings.push({
-    slotNumber: currentSlot,
-    level: 900,
-    isScripted: false,
-    allowedPool: getAllowedPoolForSlot(currentSlot),
-  });
-  currentSlot++;
 
-  // Bracket 4: 901 - 1000 (every 2 levels starting from 902 -> 50 total: slots to 287)
-  for (let lvl = 902; lvl <= 1000; lvl += 2) {
+  // Bracket 4: 801 - 1000 (every 2 levels starting from 802 -> 100 total: slots 203 to 302)
+  for (let lvl = 802; lvl <= 1000; lvl += 2) {
     cravings.push({
       slotNumber: currentSlot,
       level: lvl,
@@ -110,6 +102,6 @@ export function getBracketForSlot(slotNumber: number): string {
   if (!craving) return '101-200';
   if (craving.level <= 200) return '101-200';
   if (craving.level <= 400) return '201-400';
-  if (craving.level <= 900) return '401-900';
-  return '901-1000';
+  if (craving.level <= 800) return '401-800';
+  return '801-1000';
 }

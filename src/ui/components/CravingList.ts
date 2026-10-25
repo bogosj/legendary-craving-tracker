@@ -23,8 +23,12 @@ export class CravingListComponent {
 
     // 2. Filter by Bracket (if not 'all')
     if (state.selectedBracket !== 'all') {
+      let activeBracket = state.selectedBracket;
+      if (activeBracket === '401-900') activeBracket = '401-800';
+      if (activeBracket === '901-1000') activeBracket = '801-1000';
+
       filteredCravings = filteredCravings.filter(
-        (c) => getBracketForSlot(c.slotNumber) === state.selectedBracket
+        (c) => getBracketForSlot(c.slotNumber) === activeBracket
       );
     }
 
