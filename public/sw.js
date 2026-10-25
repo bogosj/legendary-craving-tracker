@@ -1,4 +1,4 @@
-const CACHE_NAME = 'necromerger-tracker-v4';
+const CACHE_NAME = 'necromerger-tracker-v5';
 const ASSETS = [
   './',
   './index.html',

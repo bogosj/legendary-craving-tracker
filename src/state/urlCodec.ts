@@ -24,13 +24,21 @@ export function decodeStateFromUrl(searchParams: URLSearchParams): TrackerRunSta
       // Fallback: check if it was raw base64 or uncompressed JSON
       try {
         const decoded = decodeURIComponent(atob(dataParam));
-        return JSON.parse(decoded);
+        const state: TrackerRunState = JSON.parse(decoded);
+        if (state && typeof state === 'object' && state.completedCravings) {
+          if (state.selectedBracket === '401-900') state.selectedBracket = '401-800';
+          if (state.selectedBracket === '901-1000') state.selectedBracket = '801-1000';
+          return state;
+        }
+        return null;
       } catch {
         return null;
       }
     }
     const state: TrackerRunState = JSON.parse(decompressed);
     if (state && typeof state === 'object' && state.completedCravings) {
+      if (state.selectedBracket === '401-900') state.selectedBracket = '401-800';
+      if (state.selectedBracket === '901-1000') state.selectedBracket = '801-1000';
       return state;
     }
   } catch (err) {

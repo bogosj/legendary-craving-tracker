@@ -45,6 +45,8 @@ export class TrackerStateManager {
       const urlParams = new URLSearchParams(window.location.search);
       const stateFromUrl = decodeStateFromUrl(urlParams);
       if (stateFromUrl) {
+        if (stateFromUrl.selectedBracket === '401-900') stateFromUrl.selectedBracket = '401-800';
+        if (stateFromUrl.selectedBracket === '901-1000') stateFromUrl.selectedBracket = '801-1000';
         // Save to localStorage as well
         this.saveToStorage(stateFromUrl);
         return stateFromUrl;
@@ -57,6 +59,8 @@ export class TrackerStateManager {
         const raw = window.localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
+          if (parsed.selectedBracket === '401-900') parsed.selectedBracket = '401-800';
+          if (parsed.selectedBracket === '901-1000') parsed.selectedBracket = '801-1000';
           // Merge with all cravings to ensure schema completeness
           const defaultState = this.createDefaultState();
           return {
@@ -163,7 +167,10 @@ export class TrackerStateManager {
   }
 
   public setSelectedBracket(bracket: string) {
-    this.state.selectedBracket = bracket;
+    let normalized = bracket;
+    if (normalized === '401-900') normalized = '401-800';
+    if (normalized === '901-1000') normalized = '801-1000';
+    this.state.selectedBracket = normalized;
     this.notify();
   }
 
@@ -174,9 +181,14 @@ export class TrackerStateManager {
 
   public importState(newState: TrackerRunState) {
     const defaultState = this.createDefaultState();
+    let selectedBracket = newState.selectedBracket || 'all';
+    if (selectedBracket === '401-900') selectedBracket = '401-800';
+    if (selectedBracket === '901-1000') selectedBracket = '801-1000';
+
     this.state = {
       ...defaultState,
       ...newState,
+      selectedBracket,
       completedCravings: {
         ...defaultState.completedCravings,
         ...(newState.completedCravings || {}),

@@ -34,7 +34,7 @@ export interface LegendaryInfo {
 }
 
 export interface CravingDefinition {
-  slotNumber: number;        // 1 to 287
+  slotNumber: number;        // 1 to 302
   level: number;             // 105 to 1000
   isScripted: boolean;
   scriptedMinionId?: LegendaryMinionId;
@@ -53,6 +53,6 @@ export interface TrackerRunState {
   createdAt: number;
   updatedAt: number;
   maxDevourerLevel: number;  // Filter: 100, 200, 300, ..., 1000
-  selectedBracket: string;   // 'all' | '101-200' | '201-400' | '401-900' | '901-1000'
+  selectedBracket: string;   // 'all' | '101-200' | '201-400' | '401-800' | '801-1000'
   completedCravings: Record<number, CravingRecord>; // Keyed by slotNumber
 }
